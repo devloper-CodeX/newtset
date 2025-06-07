@@ -1,7 +1,7 @@
 import { exists } from "https://deno.land/std/fs/exists.ts";
 
 // استخدام نفس UUID الثابت من الكود الأصلي
-const userID = 'amine-CodeX';
+const userID = 'e5185305-1984-4084-81e0-f77271159c62';
 const proxyIP = Deno.env.get('PROXYIP') || '';
 
 // تأكد من أن UUID صحيح
