@@ -9,7 +9,7 @@ const WS_READY_STATE_CLOSING = 2;
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 // استخدام نفس UUID الثابت من الكود الأصلي
-const userID = '0197481f-d321-7786-8a31-800923b55298';
+const userID = 'e5185305-1984-4084-81e0-f77271159c62';
 const proxyIP = Deno.env.get('PROXYIP') || '';
 
 // تأكد من أن UUID صحيح
