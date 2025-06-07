@@ -1,63 +1,16 @@
 import { exists } from "https://deno.land/std/fs/exists.ts";
 
-const envUUID = Deno.env.get('UUID') || crypto.randomUUID();
+// استخدام نفس UUID الثابت من الكود الأصلي
+const userID = 'e5185305-1984-4084-81e0-f77271159c62';
 const proxyIP = Deno.env.get('PROXYIP') || '';
 
-const CONFIG_FILE = 'config.json';
-
-interface Config {
-  uuid?: string;
-}
-
-async function getUUIDFromConfig(): Promise<string | undefined> {
-  if (await exists(CONFIG_FILE)) {
-    try {
-      const configText = await Deno.readTextFile(CONFIG_FILE);
-      const config: Config = JSON.parse(configText);
-      if (config.uuid && isValidUUID(config.uuid)) {
-        console.log(`Loaded UUID from ${CONFIG_FILE}: ${config.uuid}`);
-        return config.uuid;
-      }
-    } catch (e) {
-      console.warn(`Error reading or parsing ${CONFIG_FILE}:`, e.message);
-    }
-  }
-  return undefined;
-}
-
-async function saveUUIDToConfig(uuid: string): Promise<void> {
-  try {
-    const config: Config = { uuid: uuid };
-    await Deno.writeTextFile(CONFIG_FILE, JSON.stringify(config, null, 2));
-    console.log(`Saved new UUID to ${CONFIG_FILE}: ${uuid}`);
-  } catch (e) {
-    console.error(`Failed to save UUID to ${CONFIG_FILE}:`, e.message);
-  }
-}
-
-// Generate or load a random UUID
-let userID: string;
-
-if (envUUID && isValidUUID(envUUID)) {
-  userID = envUUID;
-  console.log(`Using UUID from environment: ${userID}`);
-} else {
-  const configUUID = await getUUIDFromConfig();
-  if (configUUID) {
-    userID = configUUID;
-  } else {
-    userID = crypto.randomUUID();
-    console.log(`Generated new UUID: ${userID}`);
-    await saveUUIDToConfig(userID);
-  }
-}
-
+// تأكد من أن UUID صحيح
 if (!isValidUUID(userID)) {
-  throw new Error('uuid is not valid');
+  throw new Error('UUID is not valid');
 }
 
 console.log(Deno.version);
-console.log(`Final UUID in use: ${userID}`);
+console.log(`Using fixed UUID: ${userID}`);
 
 Deno.serve(async (request: Request) => {
   const upgrade = request.headers.get('upgrade') || '';
@@ -296,7 +249,7 @@ function processVlessHeader(vlessBuffer: ArrayBuffer, userID: string) {
     default:
       return {
         hasError: true,
-        message: `invild  addressType is ${addressType}`,
+        message: `invild addressType is ${addressType}`,
       };
   }
   if (!addressValue) {
@@ -366,7 +319,7 @@ function base64ToArrayBuffer(base64Str: string) {
     const arryBuffer = Uint8Array.from(decode, (c) => c.charCodeAt(0));
     return { earlyData: arryBuffer.buffer, error: null };
   } catch (error) {
-    return { error: error };
+    return { error };
   }
 }
 
